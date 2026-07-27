@@ -33,23 +33,23 @@ struct ASINClassificationTests {
   @Test
   func printBookASINClassifies() {
     let expected = ISBN("9781400033416")!
-    #expect(ASINClassification(classifying: "1400033411") == .printBook(expected))
+    #expect(ASINClassification(of: "1400033411") == .printBook(expected))
   }
 
   @Test
   func kindleASINFallsThrough() {
-    #expect(ASINClassification(classifying: "B0C1XYZ123") == .kindleOrOther(asin: "B0C1XYZ123"))
+    #expect(ASINClassification(of: "B0C1XYZ123") == .kindleOrOther(asin: "B0C1XYZ123"))
   }
 
   @Test
   func checksumInvalidTenCharTokenFallsThrough() {
-    #expect(ASINClassification(classifying: "1400033412") == .kindleOrOther(asin: "1400033412"))
+    #expect(ASINClassification(of: "1400033412") == .kindleOrOther(asin: "1400033412"))
   }
 
   @Test
   func thirteenDigitStringIsNotAnASIN() {
     // ASINs are exactly 10 characters; a pasted ISBN-13 must not classify.
     #expect(
-      ASINClassification(classifying: "9781400033416") == .kindleOrOther(asin: "9781400033416"))
+      ASINClassification(of: "9781400033416") == .kindleOrOther(asin: "9781400033416"))
   }
 }

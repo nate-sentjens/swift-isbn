@@ -46,8 +46,8 @@ public enum ASINClassification: Hashable, Sendable {
   /// statistically negligible.
   ///
   /// ```swift
-  /// classification(ofASIN: "1400033411")   // .printBook(9781400033416)
-  /// classification(ofASIN: "B0C1XYZ123")   // .kindleOrOther
+  /// ASINClassification(of: "1400033411")   // .printBook(9781400033416)
+  /// ASINClassification(of: "B0C1XYZ123")   // .kindleOrOther
   /// ```
   ///
   /// - Warning: A `kindleOrOther` classification does not imply the product
@@ -59,7 +59,7 @@ public enum ASINClassification: Hashable, Sendable {
   /// - Parameter asin: The 10-character ASIN token.
   /// - Returns: Returns `ASINClassification/printBook(_:)` when the token is a
   ///   valid ISBN-10; otherwise, returns `ASINClassification/kindleOrOther(asin:)`.
-  public init(classifying asin: String) {
+  public init(of asin: String) {
     if asin.count == 10, let isbn = ISBN(asin) {
       self = .printBook(isbn)
     } else {
