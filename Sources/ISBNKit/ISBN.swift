@@ -46,7 +46,7 @@
 ///
 /// `Codable` uses a single-value container: an `ISBN` encodes as the bare
 /// canonical string (like `UUID` and `URL`), and decoding routes through
-/// the same validating parser as ``init(_:)`` — so the invariant below
+/// the same validating parser as ``init(_:)``&mdash;so the invariant below
 /// holds for decoded values too, and legacy ISBN-10 strings in external
 /// JSON normalize on decode.
 public struct ISBN: Hashable, Sendable {
@@ -157,9 +157,9 @@ extension ISBN: CodingKeyRepresentable {
   }
 }
 
-// MARK: CustomStringConvertible
+// MARK: LosslessStringConvertible
 
-extension ISBN: CustomStringConvertible {
+extension ISBN: LosslessStringConvertible {
 
   public var description: String {
     digits

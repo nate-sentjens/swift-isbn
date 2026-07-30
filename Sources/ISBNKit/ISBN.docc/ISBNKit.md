@@ -12,11 +12,12 @@ design was rejected, is in <doc:OneIdentifierOneType>.
 ```swift
 let isbn = ISBN("0201896834")!    // legacy form in
 
-String(describing: isbn)          // "9780201896831" — canonical out
+String(isbn)                      // "9780201896831" — canonical out
+isbn.formatted()                  // "978-0-201-89683-1" — hyphenated
 isbn == ISBN("9780201896831")     // true: same registration
 ```
 
-For Amazon integration, ``ASINClassification(of:)`` reflects the fact that
+For Amazon integration, ``ASINClassification`` reflects the fact that
 print-book ASINs are ISBN-10s, turning a checksum pass into a deterministic
 identity.
 
@@ -27,6 +28,14 @@ identity.
 
 ### Core
 - ``ISBN``
+
+### Formatting
+- ``ISBN/FormatStyle``
+- ``ISBN/ParseStrategy``
+- ``ISBN/ParseError``
+- ``ISBN/formatted()``
+- ``ISBN/formatted(_:)``
+- ``ISBN/hyphenated``
 
 ### Amazon ASIN classification
 - ``ASINClassification``

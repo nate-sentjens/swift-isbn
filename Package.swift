@@ -1,9 +1,16 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.0
 
 import PackageDescription
 
 let package = Package(
   name: "ISBNKit",
+  platforms: [
+    .iOS(.v15),
+    .watchOS(.v8),
+    .macOS(.v12),
+    .tvOS(.v15),
+    .visionOS(.v1)
+  ],
   products: [
     .library(name: "ISBNKit", targets: ["ISBNKit"]),
   ],

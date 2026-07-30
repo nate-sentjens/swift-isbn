@@ -37,4 +37,4 @@ provenance (which form appeared in a MARC record), or agency tools that
 assign check digits — genuinely operate per-format and deserve distinct
 types. A consumer product that resolves books and builds links never does:
 every downstream system speaks ISBN-13, and the only form-specific
-operation is the boundary parse inside ``classification(ofASIN:)``.
+operation is the boundary parse inside ``ASINClassification``.

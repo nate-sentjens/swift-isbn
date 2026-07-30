@@ -21,10 +21,8 @@
 // SOFTWARE.
 
 import Foundation
-import Testing
-
-@testable
 import ISBNKit
+import Testing
 
 // MARK: - Parsing
 
@@ -41,14 +39,14 @@ struct Parsing {
   func acceptsISBN10Input() throws {
     let parsed = try #require(ISBN("1400033411"))
 
-    #expect(parsed.digits == "9781400033416")
+    #expect(String(parsed) == "9781400033416")
   }
 
   @Test
   func acceptsXCheckCharacter() throws {
     let parsed = try #require(ISBN("043942089X"))
 
-    #expect(parsed.digits.hasPrefix("978043942089"))
+    #expect(String(parsed).hasPrefix("978043942089"))
     #expect(ISBN("043942089x") == parsed)
   }
 
@@ -138,14 +136,14 @@ struct CodableRepresentation {
   func decodesBareString() throws {
     let decoded = try JSONDecoder().decode(ISBN.self, from: Data("\"9781400033416\"".utf8))
 
-    #expect(decoded.digits == "9781400033416")
+    #expect(String(decoded) == "9781400033416")
   }
 
   @Test
   func decodeNormalizesLegacyForm() throws {
     let decoded = try JSONDecoder().decode(ISBN.self, from: Data("\"1400033411\"".utf8))
 
-    #expect(decoded.digits == "9781400033416")
+    #expect(String(decoded) == "9781400033416")
   }
 
   @Test
