@@ -35,7 +35,7 @@
 /// equal.
 ///
 /// ```swift
-/// ISBN("1400033411") == ISBN("9781400033416")   // true — same book
+/// ISBN("0201896834") == ISBN("9780201896831")   // true — same book
 /// ```
 ///
 /// The legacy form is recoverable via ``isbn10String`` where one exists.

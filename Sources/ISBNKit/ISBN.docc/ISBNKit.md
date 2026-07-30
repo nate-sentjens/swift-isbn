@@ -11,11 +11,12 @@ design was rejected, is in <doc:OneIdentifierOneType>.
 
 ```swift
 let isbn = ISBN("0201896834")!    // legacy form in
-isbn.digits                       // "9780201896831" — canonical out
+
+String(describing: isbn)          // "9780201896831" — canonical out
 isbn == ISBN("9780201896831")     // true: same registration
 ```
 
-For Amazon integration, ``classification(ofASIN:)`` reflects the fact that
+For Amazon integration, ``ASINClassification(of:)`` reflects the fact that
 print-book ASINs are ISBN-10s, turning a checksum pass into a deterministic
 identity.
 
@@ -29,4 +30,3 @@ identity.
 
 ### Amazon ASIN classification
 - ``ASINClassification``
-- ``classification(ofASIN:)``
