@@ -20,33 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// MARK: ISBN Hyphenation
+// MARK: URN
 
 extension ISBN {
 
-  /// The canonical hyphenated ISBN-13, with hyphens placed according to the
-  /// International ISBN Agency's registration group and registrant ranges.
+  /// The ISBN as a Uniform Resource Name per RFC 3187.
   ///
-  /// For ISBNs whose registration group or registrant range is not in the
-  /// embedded range table, the bare 13-digit string is returned instead.
+  /// Uses the canonical 13-digit form with the lowercase `urn:isbn:`
+  /// prefix per RFC 8141.
   ///
   /// ```swift
   /// let isbn = ISBN("9780201896831")!
-  /// isbn.hyphenated   // "978-0-201-89683-1"
+  /// isbn.urn  // "urn:isbn:9780201896831"
   /// ```
-  public var hyphenated: String {
-    guard let components else {
-      return digits
-    }
-
-    let constructed = [
-      components.registrationGroup.prefix,
-      components.registrant,
-      components.publication,
-      String(digits.suffix(1))
-    ]
-
-    return constructed
-      .joined(separator: "-")
+  public var urn: String {
+    "urn:isbn:\(digits)"
   }
 }

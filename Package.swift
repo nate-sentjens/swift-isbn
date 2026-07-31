@@ -8,8 +8,7 @@ let package = Package(
     .iOS(.v15),
     .watchOS(.v8),
     .macOS(.v12),
-    .tvOS(.v15),
-    .visionOS(.v1)
+    .tvOS(.v15)
   ],
   products: [
     .library(name: "ISBNKit", targets: ["ISBNKit"]),

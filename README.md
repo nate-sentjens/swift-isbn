@@ -15,7 +15,35 @@ let isbn = ISBN("0201896834")!    // parses ISBN-10 or ISBN-13
 isbn.formatted()      // "978-0-201-89683-1"
 isbn.hyphenated       // "978-0-201-89683-1"
 String(isbn)          // "9780201896831"
-isbn.isbn10String     // Optional("0201896834")
+isbn.isbn10?.digits   // Optional("0201896834")
+isbn.isbn10?.hyphenated // Optional("0-201-89683-4")
+```
+
+### Structure
+`isbn.components` decomposes an ISBN into its registration group, registrant,
+and publication, using the ISBN Agency's range table:
+
+```swift
+let isbn = ISBN("9780201896831")!
+
+isbn.registrationGroup?.name       // "English language"
+isbn.components?.registrant        // "201" (Addison-Wesley)
+isbn.components?.publication       // "89683"
+```
+
+`isbn.registrationGroup` is available independently; it succeeds even for
+unallocated registrant ranges.
+
+Group books by publisher using `publisherPrefix`:
+
+```swift
+let byPublisher = Dictionary(grouping: isbns) { $0.publisherPrefix }
+```
+
+Browse all 287 registration groups from the embedded catalog:
+
+```swift
+let groups979 = ISBN.RegistrationGroup.groups(withGS1Prefix: "979")
 ```
 
 ### FormatStyle
@@ -35,6 +63,31 @@ hyphens and spaces. Both forms of the same registration compare equal:
 
 ```swift
 ISBN("0201896834") == ISBN("978-0-201-89683-1")  // true — same book
+```
+
+### Validation
+`ISBN.validate` returns diagnostic information about invalid input, and
+`ISBN.corrections` suggests likely fixes for near-miss ISBNs:
+
+```swift
+ISBN.validate("9780201896830")       // .failure(.invalidCheckDigit(expected: "1"))
+ISBN.corrections(for: "9780201896830")  // [ISBN("9780201896831")!]
+```
+
+### Text extraction
+`ISBN.regex` finds validated ISBNs in free text (iOS 16+ / macOS 13+):
+
+```swift
+let text = "See ISBN 978-0-201-89683-1 and also 043942089X."
+let isbns = text.matches(of: ISBN.regex).map(\.output)
+// [ISBN("9780201896831")!, ISBN("043942089X")!]
+```
+
+### Sorting
+`ISBN` conforms to `Comparable`, sorting by canonical 13-digit form:
+
+```swift
+let sorted = isbns.sorted()  // 978… before 979…
 ```
 
 ### ASIN classification
@@ -69,7 +122,7 @@ serialization — a single `ISBN` type, not `ISBN10` and `ISBN13`. See the
 DocC article for the full rationale.
 
 979-prefixed registrations have no ISBN-10 form. That partiality is confined
-to a single optional (`isbn10String: String?`) rather than leaking into
+to a single optional (`isbn10: TenDigitForm?`) rather than leaking into
 every signature that carries the identifier.
 
 Hyphenation uses the International ISBN Agency's range table to place hyphens

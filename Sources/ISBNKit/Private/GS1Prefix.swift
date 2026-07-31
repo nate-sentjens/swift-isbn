@@ -20,33 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// MARK: ISBN Hyphenation
+// MARK: - GS1Prefix
 
-extension ISBN {
+enum GS1Prefix {
 
-  /// The canonical hyphenated ISBN-13, with hyphens placed according to the
-  /// International ISBN Agency's registration group and registrant ranges.
-  ///
-  /// For ISBNs whose registration group or registrant range is not in the
-  /// embedded range table, the bare 13-digit string is returned instead.
-  ///
-  /// ```swift
-  /// let isbn = ISBN("9780201896831")!
-  /// isbn.hyphenated   // "978-0-201-89683-1"
-  /// ```
-  public var hyphenated: String {
-    guard let components else {
-      return digits
-    }
+  // MARK: Internal
 
-    let constructed = [
-      components.registrationGroup.prefix,
-      components.registrant,
-      components.publication,
-      String(digits.suffix(1))
-    ]
+  static let isbn10Compatible = "978"
+  static let isbn13Only = "979"
 
-    return constructed
-      .joined(separator: "-")
-  }
 }

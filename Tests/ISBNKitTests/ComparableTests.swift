@@ -20,37 +20,64 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import ISBNKit
 import Testing
 
-@testable
-import ISBNKit
-
-// MARK: - ASINClassificationTests
+// MARK: - ComparableTests
 
 @Suite
-struct ASINClassificationTests {
+struct ComparableTests {
 
   @Test
-  func printBookASINClassifies() throws {
-    let expected = try #require(ISBN("9781400033416"))
+  func smallerDigitsPrecedeLarger() throws {
+    let a = try #require(ISBN("9780060112080"))
+    let b = try #require(ISBN("9780201896831"))
 
-    #expect(ASINClassification(of: "1400033411") == .printBook(expected))
+    #expect(a < b)
+    #expect(!(b < a))
   }
 
   @Test
-  func kindleASINFallsThrough() {
-    #expect(ASINClassification(of: "B0C1XYZ123") == .kindleOrOther(asin: "B0C1XYZ123"))
+  func equalISBNsAreNotLessThan() throws {
+    let a = try #require(ISBN("9780201896831"))
+    let b = try #require(ISBN("0201896834"))
+
+    #expect(!(a < b))
+    #expect(!(b < a))
   }
 
   @Test
-  func checksumInvalidTenCharTokenFallsThrough() {
-    #expect(ASINClassification(of: "1400033412") == .kindleOrOther(asin: "1400033412"))
+  func isbn978PrecedesISBN979() throws {
+    let a = try #require(ISBN("9780201896831"))
+    let b = try #require(ISBN("9798601570022"))
+
+    #expect(a < b)
   }
 
   @Test
-  func thirteenDigitStringIsNotAnASIN() {
-    // ASINs are exactly 10 characters; a pasted ISBN-13 must not classify.
-    #expect(
-      ASINClassification(of: "9781400033416") == .kindleOrOther(asin: "9781400033416"))
+  func sortedArrayMatchesDigitOrder() throws {
+    let isbns = try [
+      #require(ISBN("9798601570022")),
+      #require(ISBN("9780060112080")),
+      #require(ISBN("9783161484100")),
+      #require(ISBN("9780201896831")),
+    ]
+
+    let sorted = isbns.sorted()
+
+    #expect(sorted.map(String.init) == [
+      "9780060112080",
+      "9780201896831",
+      "9783161484100",
+      "9798601570022",
+    ])
+  }
+
+  @Test
+  func isbn10InputSortsByCanonicalForm() throws {
+    let fromISBN10 = try #require(ISBN("0201896834"))
+    let isbn13 = try #require(ISBN("9783161484100"))
+
+    #expect(fromISBN10 < isbn13)
   }
 }

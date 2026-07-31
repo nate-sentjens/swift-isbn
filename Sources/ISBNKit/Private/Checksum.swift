@@ -20,33 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// MARK: ISBN Hyphenation
+// MARK: - Checksum
 
-extension ISBN {
+enum Checksum {
 
-  /// The canonical hyphenated ISBN-13, with hyphens placed according to the
-  /// International ISBN Agency's registration group and registrant ranges.
-  ///
-  /// For ISBNs whose registration group or registrant range is not in the
-  /// embedded range table, the bare 13-digit string is returned instead.
-  ///
-  /// ```swift
-  /// let isbn = ISBN("9780201896831")!
-  /// isbn.hyphenated   // "978-0-201-89683-1"
-  /// ```
-  public var hyphenated: String {
-    guard let components else {
-      return digits
-    }
+  // MARK: Internal
 
-    let constructed = [
-      components.registrationGroup.prefix,
-      components.registrant,
-      components.publication,
-      String(digits.suffix(1))
-    ]
+  /// Returns the EAN-13 check digit for the first 12 characters of `digits`.
+  static func ean13CheckDigit(forFirst12 digits: some StringProtocol) -> Int {
+    let sum = digits
+      .prefix(12)
+      .enumerated()
+      .reduce(into: 0) { partial, element in
+        let digit = element.element.wholeNumberValue ?? 0
 
-    return constructed
-      .joined(separator: "-")
+        partial += digit * (element.offset.isMultiple(of: 2) ? 1 : 3)
+      }
+
+    return (10 - sum % 10) % 10
+  }
+
+  /// Returns the weighted sum of a nine-digit ISBN-10 payload (weights 10 down
+  /// to 2), from which the check digit is derived.
+  static func weightedISBN10Sum(ofPayload payload: some StringProtocol) -> Int {
+    payload
+      .enumerated()
+      .reduce(into: 0) { partial, element in
+        partial += (element.element.wholeNumberValue ?? 0) * (10 - element.offset)
+      }
   }
 }

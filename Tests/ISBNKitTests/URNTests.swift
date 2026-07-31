@@ -20,33 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-// MARK: ISBN Hyphenation
+import ISBNKit
+import Testing
 
-extension ISBN {
+// MARK: - URNTests
 
-  /// The canonical hyphenated ISBN-13, with hyphens placed according to the
-  /// International ISBN Agency's registration group and registrant ranges.
-  ///
-  /// For ISBNs whose registration group or registrant range is not in the
-  /// embedded range table, the bare 13-digit string is returned instead.
-  ///
-  /// ```swift
-  /// let isbn = ISBN("9780201896831")!
-  /// isbn.hyphenated   // "978-0-201-89683-1"
-  /// ```
-  public var hyphenated: String {
-    guard let components else {
-      return digits
-    }
+@Suite
+struct URNTests {
 
-    let constructed = [
-      components.registrationGroup.prefix,
-      components.registrant,
-      components.publication,
-      String(digits.suffix(1))
-    ]
+  @Test
+  func urnForISBN13() throws {
+    let isbn = try #require(ISBN("9780201896831"))
 
-    return constructed
-      .joined(separator: "-")
+    #expect(isbn.urn == "urn:isbn:9780201896831")
+  }
+
+  @Test
+  func urnFromISBN10Input() throws {
+    let isbn = try #require(ISBN("0201896834"))
+
+    #expect(isbn.urn == "urn:isbn:9780201896831")
+  }
+
+  @Test
+  func urnPrefixIsLowercase() throws {
+    let isbn = try #require(ISBN("9780201896831"))
+
+    #expect(isbn.urn.hasPrefix("urn:isbn:"))
   }
 }

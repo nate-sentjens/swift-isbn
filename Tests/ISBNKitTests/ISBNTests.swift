@@ -102,21 +102,21 @@ struct LegacySerialization {
   func rendersISBN10For978Registrations() throws {
     let isbn = try #require(ISBN("9780201896831"))
 
-    #expect(isbn.isbn10String == "0201896834")
+    #expect(isbn.isbn10?.digits == "0201896834")
   }
 
   @Test
   func roundTripsXCheckCharacter() throws {
     let isbn = try #require(ISBN("043942089X"))
 
-    #expect(isbn.isbn10String == "043942089X")
+    #expect(isbn.isbn10?.digits == "043942089X")
   }
 
   @Test
   func has979RegistrationsRenderNoISBN10() throws {
     let isbn = try #require(ISBN("9798601570022"))
 
-    #expect(isbn.isbn10String == nil)
+    #expect(isbn.isbn10 == nil)
   }
 }
 
@@ -127,7 +127,8 @@ struct CodableRepresentation {
 
   @Test
   func encodesAsBareString() throws {
-    let encoded = try JSONEncoder().encode(ISBN("9781400033416")!)
+    let isbn = try #require(ISBN("9781400033416"))
+    let encoded = try JSONEncoder().encode(isbn)
 
     #expect(String(decoding: encoded, as: UTF8.self) == "\"9781400033416\"")
   }
@@ -155,7 +156,7 @@ struct CodableRepresentation {
 
   @Test
   func roundTripsThroughJSON() throws {
-    let original = ISBN("043942089X")!
+    let original = try #require(ISBN("043942089X"))
     let decoded = try JSONDecoder().decode(ISBN.self, from: JSONEncoder().encode(original))
 
     #expect(decoded == original)
@@ -163,10 +164,59 @@ struct CodableRepresentation {
 
   @Test
   func dictionaryKeysEncodeAsObjectKeys() throws {
-    let shelf: [ISBN: Int] = [ISBN("9781400033416")!: 1]
+    let isbn = try #require(ISBN("9781400033416"))
+    let shelf: [ISBN: Int] = [isbn: 1]
     let encoded = try JSONEncoder().encode(shelf)
     let object = try JSONDecoder().decode([String: Int].self, from: encoded)
 
     #expect(object == ["9781400033416": 1])
+  }
+}
+
+// MARK: - IdentifiableConformance
+
+@Suite
+struct IdentifiableConformance {
+
+  @Test
+  func idReturnsSelf() throws {
+    let isbn = try #require(ISBN("9780201896831"))
+
+    #expect(isbn.id == isbn)
+  }
+
+  @Test
+  func equalISBNsHaveEqualIds() throws {
+    let fromISBN10 = try #require(ISBN("0201896834"))
+    let fromISBN13 = try #require(ISBN("9780201896831"))
+
+    #expect(fromISBN10.id == fromISBN13.id)
+  }
+}
+
+// MARK: - DebugDescription
+
+@Suite
+struct DebugDescription {
+
+  @Test
+  func includesHyphenatedForm() throws {
+    let isbn = try #require(ISBN("9780201896831"))
+
+    #expect(isbn.debugDescription == "ISBN(978-0-201-89683-1)")
+  }
+
+  @Test
+  func debugDescriptionDiffersFromDescription() throws {
+    let isbn = try #require(ISBN("9780201896831"))
+
+    #expect(isbn.debugDescription != isbn.description)
+  }
+
+  @Test
+  func isbn979Registration() throws {
+    let isbn = try #require(ISBN("9798601570022"))
+
+    #expect(isbn.debugDescription == "ISBN(979-8-6015-7002-2)")
   }
 }

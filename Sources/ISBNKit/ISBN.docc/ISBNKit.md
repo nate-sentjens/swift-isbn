@@ -29,6 +29,18 @@ identity.
 ### Core
 - ``ISBN``
 
+### Structure
+- ``ISBN/RegistrationGroup``
+- ``ISBN/Components``
+- ``ISBN/PublisherPrefix``
+- ``ISBN/registrationGroup``
+- ``ISBN/components``
+- ``ISBN/publisherPrefix``
+
+### ISBN-10
+- ``ISBN/TenDigitForm``
+- ``ISBN/isbn10``
+
 ### Formatting
 - ``ISBN/FormatStyle``
 - ``ISBN/ParseStrategy``
@@ -36,6 +48,16 @@ identity.
 - ``ISBN/formatted()``
 - ``ISBN/formatted(_:)``
 - ``ISBN/hyphenated``
+- ``ISBN/urn``
+
+### Validation
+- ``ISBN/ValidationError``
+- ``ISBN/validate(_:)``
+- ``ISBN/corrections(for:)``
+
+### Text Extraction
+- ``ISBNRegexComponent``
+- ``ISBN/regex``
 
 ### Amazon ASIN classification
 - ``ASINClassification``
